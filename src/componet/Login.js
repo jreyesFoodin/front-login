@@ -52,7 +52,10 @@ const Login = ({ setLoginView }) => {
               const userProfile = await api.get('auth/user', null, headers)
               if (userProfile.success) {
                 setUser(userProfile.data)
+                window.location.reload()
                 return user
+              } else {
+                setToken(null)
               }
             }
             setLoading(false)
