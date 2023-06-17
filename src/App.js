@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import Login from './componet/Login'
+import Register from './componet/Register'
+import { useState } from 'react'
+function App () {
+  // const token = ''
+  const [loginView, setLoginView] = useState(false)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div class='modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5' tabindex='-1' role='dialog' id='modalSignin'>
+      <div class='modal-dialog' role='document'>
+        {loginView
+          ? <Login setLoginView={setLoginView} />
+          : <Register setLoginView={setLoginView} />}
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
