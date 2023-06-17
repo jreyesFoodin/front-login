@@ -7,6 +7,7 @@ import { regexPass } from '../constant/Regex'
 import Button from './Button/Button'
 import { useState } from 'react'
 import useApi from '../hook/useApi'
+import Alert from './Alert'
 
 const validate = (values) => {
   const error = {}
@@ -59,6 +60,7 @@ const validate = (values) => {
 const Register = ({ setLoginView }) => {
   const api = useApi()
   const [loading, setLoading] = useState(false)
+  const [alertPop, setAlertPop] = useState(null)
   return (
     <div className='modal-content rounded-4 shadow'>
       <div className='modal-header p-5 pb-4 border-bottom-0'>
@@ -90,6 +92,11 @@ const Register = ({ setLoginView }) => {
             const response = await api.post('auth/signup', data)
             if (response.success) {
               setLoginView(true)
+            } else {
+              setAlertPop({
+                message: response.message,
+                alertColor: 'alert-warning'
+              })
             }
             setLoading(false)
           }}
@@ -116,6 +123,7 @@ const Register = ({ setLoginView }) => {
             <div className='form-floating mb-3'>
               <InputPassWord name='pass2' label='Repite la contraseña' />
             </div>
+            {alertPop && <Alert message={alertPop.message} alertColor={alertPop.alertColor} />}
             <Button
               className='w-100 mb-2 btn btn-lg rounded-3 btn-primary'
               type='submit'

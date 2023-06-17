@@ -7,6 +7,7 @@ import { useState } from 'react'
 import useApi from '../hook/useApi'
 import { useLocalStorage } from '../hook/useLocalStorage'
 import Button from './Button/Button'
+import Alert from './Alert'
 
 const validate = (values) => {
   const error = {}
@@ -20,7 +21,6 @@ const validate = (values) => {
   } else if (!regexPass.test(values.password)) {
     error.password = ErrorForm.errorFormLogin.password
   }
-  console.log('error', error)
   return error
 }
 
@@ -28,6 +28,7 @@ const Login = ({ setLoginView }) => {
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useLocalStorage('user', null)
   const [token, setToken] = useLocalStorage('token', null)
+  const [alertPop, setAlertPop] = useState(null)
   const api = useApi()
   return (
     <div className='modal-content rounded-4 shadow'>
@@ -56,7 +57,16 @@ const Login = ({ setLoginView }) => {
                 return user
               } else {
                 setToken(null)
+                setAlertPop({
+                  message: response.message,
+                  alertColor: 'alert-warning'
+                })
               }
+            } else {
+              setAlertPop({
+                message: response.message,
+                alertColor: 'alert-warning'
+              })
             }
             setLoading(false)
           }}
@@ -68,6 +78,7 @@ const Login = ({ setLoginView }) => {
             <div className='form-floating mb-3'>
               <InputPassWord name='password' label='password' />
             </div>
+            {alertPop && <Alert message={alertPop.message} alertColor={alertPop.alertColor} />}
             <Button
               className='w-100 mb-2 btn btn-lg rounded-3 btn-primary'
               loading={loading}
