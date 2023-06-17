@@ -3,7 +3,7 @@ import Register from './componet/Register'
 import { useState } from 'react'
 function App () {
   // const token = ''
-  const [loginView, setLoginView] = useState(false)
+  const [loginView, setLoginView] = useState(true)
   return (
     <div class='modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5' tabindex='-1' role='dialog' id='modalSignin'>
       <div class='modal-dialog' role='document'>
