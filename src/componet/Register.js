@@ -1,9 +1,12 @@
 import { Formik, Form } from 'formik'
-import InputText from '../componet/Input/InputText'
+import InputText from './Input/InputText'
 import InputPhone from './Input/InputPhone'
 import InputPassWord from './Input/InputPassWord'
 import { ErrorForm } from '../constant'
 import { regexPass } from '../constant/Regex'
+import Button from './Button/Button'
+import { useState } from 'react'
+import useApi from '../hook/useApi'
 
 const validate = (values) => {
   const error = {}
@@ -30,9 +33,6 @@ const validate = (values) => {
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
     error.email = ErrorForm.errorFormLogin.email
   }
-  if (!values.status) {
-    error.status = ErrorForm.errorGeneral.required
-  }
 
   if (!values.password) {
     error.password = ErrorForm.errorGeneral.required
@@ -57,6 +57,8 @@ const validate = (values) => {
   return error
 }
 const Register = ({ setLoginView }) => {
+  const api = useApi()
+  const [loading, setLoading] = useState(false)
   return (
     <div className='modal-content rounded-4 shadow'>
       <div className='modal-header p-5 pb-4 border-bottom-0'>
@@ -75,16 +77,21 @@ const Register = ({ setLoginView }) => {
           }}
           validate={validate}
           onSubmit={async (values, { setSubmitting }) => {
-            // setLoading(true)
-            // const response = await RegisterAction({
-            //   name: values.name,
-            //   lastName: values.lastName,
-            //   secondLastName: values.secondLastName,
-            //   email: values.email,
-            //   phone: values.phone,
-            //   birthDay: values.birthDay,
-            //   password: values.password
-            // })
+            setLoading(true)
+            const data = {
+              name: values.name,
+              lastName: values.lastName,
+              secondLastName: values.secondLastName,
+              email: values.email,
+              phone: values.phone,
+              birthDay: values.birthDay,
+              password: values.password
+            }
+            const response = await api.post('auth/signup', data)
+            if (response.success) {
+              setLoginView(true)
+            }
+            setLoading(false)
           }}
         >
           <Form>
@@ -109,7 +116,13 @@ const Register = ({ setLoginView }) => {
             <div className='form-floating mb-3'>
               <InputPassWord name='pass2' label='Repite la contraseña' />
             </div>
-            <button className='w-100 mb-2 btn btn-lg rounded-3 btn-primary' type='submit'>Registrar</button>
+            <Button
+              className='w-100 mb-2 btn btn-lg rounded-3 btn-primary'
+              type='submit'
+              loading={loading}
+            >
+              Registrate
+            </Button>
             <hr className='my-4' />
             <button className='w-100 py-2 mb-2 btn btn-outline-secondary rounded-3' type='submit' onClick={() => setLoginView(true)}>
               Iniciar Session
